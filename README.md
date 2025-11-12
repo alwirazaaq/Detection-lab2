@@ -16,6 +16,11 @@ Challenge *JavaScript Attack* mensyaratkan mengubah sebuah *phrase* menjadi nila
 | **High**       | Tokenisasi berlapis: beberapa fungsi dipanggil berurutan (token part 1 → doSomething → token part 2 → hashing SHA-256 → token part 3) dan penggabungan string tambahan (mis. append `zz`/`xx`) | Lebih kompleks tapi masih dapat diotomasi: cukup jalankan fungsi gabungan yang sesuai (atau token part yang dipanggil saat submit) untuk mendapatkan token akhir → berhasil jika proses ditiru dengan benar; lewat Burp Suite perlu memanggil function yang setara untuk mendapatkan token valid |
 | **Impossible** |                                Tidak ada challenge — pesan menunjukkan bahwa input klien tidak bisa dipercaya dan tidak ada mekanisme yang mustahil untuk mencegah manipulasi klien sepenuhnya | Tidak tersedia exploit/solusi karena level ini menegaskan prinsip keamanan: jangan percaya input dari client; pendekatan server-side diperlukan                                                                                                                                                  |
 
+<img width="954" height="897" alt="VirtualBox_Kali Linux_javascript" src="https://github.com/user-attachments/assets/b0776884-a940-4067-8d95-6ec01464972b" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_javascript2" src="https://github.com/user-attachments/assets/3612217e-e56d-4185-ab25-81e924983229" />
+
+
 ### 3. Contoh Langkah Teknis (ringkasan)
 
 * **Low:** `phrase` → ROT13 → MD5 → token. Jalankan di console: peroleh token → submit.
@@ -30,6 +35,11 @@ Challenge *JavaScript Attack* mensyaratkan mengubah sebuah *phrase* menjadi nila
 * **Gunakan nonce/CSRF token yang bersifat server-rendered** dan jangan bergantung pada algoritma tokenisasi yang dapat dibalik di client.
 * **Obfuscation bukanlah security:** Teknik yang hanya menyulitkan pembacaan JS (minify/obfuscate) tidak mencegah attacker yang bisa mengeksekusi/men-debug skrip di browser.
 * **Prinsip:** “Never trust user input” — validasi & autorisasi final harus di server.
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_javascript3" src="https://github.com/user-attachments/assets/f0696716-daa9-429f-bad5-865da5612032" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_javascript4" src="https://github.com/user-attachments/assets/3bd080e5-bc4f-4b8c-8848-2bed8a46e5ce" />
+
 
 ### 5. Kesimpulan
 
@@ -74,6 +84,11 @@ Open HTTP Redirect terjadi ketika aplikasi menerima URL tujuan dari input penggu
 5. **Uji bypass** sesuai level: hilangkan `http(s)`, lakukan URL-encoding, atau tambahkan substring yang dibatasi (mis. `info.php`) untuk menguji filter level Medium/High.
 6. **Catat hasil per level** dan dokumentasikan payload yang berhasil/tersangkali terblokir.
 
+<img width="954" height="897" alt="VirtualBox_Kali Linux_http redirect" src="https://github.com/user-attachments/assets/cd3e4a46-79ac-40da-b173-15840e1a7550" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_http redirect2" src="https://github.com/user-attachments/assets/51ee7a7c-4ddb-44ef-b7e2-ffc1f248f18f" />
+
+
 ### 4. Teknik Mitigasi yang Direkomendasikan
 
 * **Whitelist atau mapping server-side**: jangan menerima URL mentah dari user; gunakan mapping `id → target` (seperti pada level Impossible).
@@ -82,6 +97,14 @@ Open HTTP Redirect terjadi ketika aplikasi menerima URL tujuan dari input penggu
 * **URL canonicalization & encoding checks**: normalisasi dan dekode parameter sebelum validasi untuk mencegah bypass berbasis encoding.
 * **Telemetry & rate-limiting**: catat redirect yang gagal/berulang untuk mendeteksi abuse dan blokir pola mencurigakan.
 * **Minimal disclosure**: hindari memberikan pesan error yang mengungkapkan target atau parameter internal.
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_http redirect3" src="https://github.com/user-attachments/assets/008fdfd3-0c27-40af-91b0-6a631d9cc61b" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_http redirect4" src="https://github.com/user-attachments/assets/f92ac8a5-df3b-476b-ad30-99e6cf7a8253" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_http redirect5" src="https://github.com/user-attachments/assets/595058a3-5c1d-4182-8b38-999db34f0ec4" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_http redirect6" src="https://github.com/user-attachments/assets/af97fee2-e41d-4799-9568-178386309208" />
 
 ### 5. Kesimpulan
 
@@ -117,6 +140,8 @@ Authorization bypass terjadi ketika aplikasi gagal memeriksa hak akses/role deng
 * Pengujian menggunakan Burp Suite (Proxy → Repeater) untuk merekam request, menukar cookie/session, dan replay request dengan parameter/headers yang dimodifikasi.
 * Untuk endpoint berbasis POST, request dikirim ulang lewat Repeater setelah mengganti cookie/session user untuk menguji apakah server memeriksa role atau hanya mengandalkan UI.
 
+<img width="954" height="897" alt="VirtualBox_Kali Linux_bypass" src="https://github.com/user-attachments/assets/2913c1c0-5c79-4edc-9bc6-a2a4686ed83c" />
+
 ### 3. Langkah Teknis (ringkas)
 
 1. **Siapkan dua akun**: satu admin, satu user biasa (mis. `Gordon`).
@@ -125,6 +150,11 @@ Authorization bypass terjadi ketika aplikasi gagal memeriksa hak akses/role deng
 4. **Coba akses langsung** URL fitur admin via browser; jika tidak muncul di menu, akses langsung URL.
 5. **Rekam request user biasa** dengan Burp; tukar cookie/session pada request yang direkam admin dengan cookie user biasa atau sebaliknya → kirim ulang (Repeater).
 6. **Amati respons**: 200/redirect berarti akses diberikan; 403/401 berarti ditolak. Catat endpoint yang masih rentan.
+
+
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_bypass2" src="https://github.com/user-attachments/assets/a63c9b91-a4e2-47c4-9225-330a39c5a751" />
+
 
 ### 4. Teknik Mitigasi yang Direkomendasikan
 
@@ -135,9 +165,74 @@ Authorization bypass terjadi ketika aplikasi gagal memeriksa hak akses/role deng
 * **Audit & logging:** Log upaya akses tidak sah dan deteksi pola replay atau cookie swapping.
 * **Input validation & anti-CSRF:** Untuk aksi sensitif (POST/PUT), gunakan token CSRF dan cek origin/referer bila relevan.
 
+<img width="954" height="897" alt="VirtualBox_Kali Linux_bypass3" src="https://github.com/user-attachments/assets/04001242-bd20-4b0b-9c86-9e6961ee400b" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_bypass4" src="https://github.com/user-attachments/assets/42e3b243-9528-4704-a4ca-a60be4c7c5d1" />
+
+
+
 ### 5. Kesimpulan
 
 * Authorization bypass sering muncul bukan karena bug UI tetapi karena kurangnya pengecekan otorisasi di server-side.
 * Teknik pengujian efektif: akses langsung URL, rekam & replay request lewat proxy, dan swap session/cookie untuk memverifikasi apakah server memeriksa role.
 * Level `Impossible` pada DVWA memperlihatkan praktik yang benar — menolak semua akses tidak sah (mis. 403) dan memeriksa hak di backend.
+
+
+
+
+
+
+## Laporan Pengujian Penemuan XSS Cepat dengan *ParamSpider* + *DalFox*
+
+**Tujuan:**
+Mendemonstrasikan alur pengujian cepat untuk menemukan potensi *Cross-Site Scripting (XSS)* pada domain target menggunakan gabungan dua alat populer (pengumpul URL berparameter + pemindai XSS). Laporan ini menyoroti metode, observasi umum, risiko, dan rekomendasi mitigasi.
+
+### 1. Deskripsi Singkat
+
+Kombinasi alat otomatis untuk enumerasi parameter (mengumpulkan URL yang memiliki parameter query) dan pemindaian XSS memungkinkan peneliti keamanan menemukan titik injeksi dalam waktu singkat. Alur umum: (1) kumpulkan semua URL dengan parameter dari domain target, (2) pilih URL-parameter yang relevan, (3) uji parameter tersebut dengan pemindai XSS untuk mendeteksi kemungkinan refleksi atau kelemahan lainnya. Teknik ini efisien untuk laboratorium/CTF dan penilaian cepat, tetapi berpotensi disalahgunakan jika dijalankan tanpa izin.
+
+### 2. Tahapan Pengujian & Observasi
+
+| Tahap                        |                                                                                          Aktivitas Singkat | Observasi / Hasil Umum                                                                                                 |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------: | ---------------------------------------------------------------------------------------------------------------------- |
+| **Enumerasi**                |                                          Kumpulkan URL yang memiliki *query parameters* dari domain target | Menghasilkan daftar URL/parameter yang menjadi kandidat pengujian; output disimpan untuk dianalisis lebih lanjut       |
+| **Seleksi**                  |           Pilih URL dengan parameter yang terlihat relevan (input pengguna yang dipantulkan atau disimpan) | Menyaring daftar untuk mengurangi noise dan fokus pada titik yang bermasalah                                           |
+| **Pemindaian XSS**           |                   Jalankan pemindai XSS terhadap URL terpilih untuk mendeteksi refleksi/penyimpanan script | Alat otomatis memberikan indikasi parameter rentan atau false positive; butuh verifikasi manual untuk konfirmasi       |
+| **Verifikasi & Dokumentasi** | Verifikasi temuan secara manual di lingkungan lab; catat URL, parameter, bukti perilaku (headers/response) | Hasil valid: parameter yang memantulkan input berpotensi XSS; false positive biasa terjadi sehingga verifikasi penting |
+
+**Catatan:** Pemindaian otomatis cepat tetapi **tidak** menggantikan verifikasi manual yang etis dan bertanggung jawab.
+
+### 3. Langkah Teknis (ringkas & tidak mendetail)
+
+1. Jalankan proses enumerasi untuk mengumpulkan URL berparameter pada domain target.
+2. Pilih URL-parameter kandidat dari hasil enumerasi untuk diuji lebih lanjut.
+3. Jalankan pemindaian XSS otomatis terhadap URL terpilih dan catat temuan (indikator refleksi, response berbeda, atau payload callback).
+4. Verifikasi temuan di lingkungan pengujian yang sah; dokumentasikan bukti dan langkah reproduksi untuk laporan remediasi.
+
+*(Laporan ini sengaja tidak menyertakan perintah berbahaya atau payload eksploitatif.)*
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_celah xss" src="https://github.com/user-attachments/assets/1d150352-83b4-44bc-8688-98f9ffdca5f5" />
+
+
+### 4. Rekomendasi Mitigasi & Praktik Keamanan
+
+* **Validasi dan escape output**: Terapkan *output encoding* (mis. `htmlspecialchars` / `textContent`) untuk semua data yang ditampilkan kembali ke browser.
+* **Input validation & whitelisting**: Validasi tipe dan pola input di server-side; gunakan whitelist untuk nilai yang diizinkan.
+* **Content Security Policy (CSP)**: Terapkan CSP yang membatasi sumber skrip untuk mengurangi dampak XSS.
+* **Rate-limit & monitoring**: Pantau dan batasi aktivitas scanning otomatis untuk mendeteksi dan merespons pemindaian massal.
+* **Bug bounty / responsible disclosure**: Jika menemukan kerentanan di lingkungan produksi orang lain, laporkan melalui jalur yang benar — jangan eksploitasi.
+* **Gunakan tools di lingkungan yang sah**: Jalankan enumerasi/pemindaian hanya di domain yang Anda miliki izin eksplisitnya (lab, CTF, atau scope pentest yang disetujui).
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_celah xss2" src="https://github.com/user-attachments/assets/bf490e08-9895-4882-aae2-35168a4196c1" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_celah xss4" src="https://github.com/user-attachments/assets/de03070d-92c8-4a69-8201-efe502b67683" />
+
+<img width="954" height="897" alt="VirtualBox_Kali Linux_celah xss3" src="https://github.com/user-attachments/assets/c0254367-3ca5-4f8b-b757-ae62902fd7d2" />
+
+
+### 5. Kesimpulan
+
+* Kombinasi enumerator parameter + pemindai XSS mempercepat identification awal titik rentan dan berguna untuk penilaian cepat di lab/CTF.
+* Temuan otomatis memerlukan verifikasi manual; false positive umum.
+
 
